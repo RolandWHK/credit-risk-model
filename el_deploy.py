@@ -702,12 +702,13 @@ if page == "Individual Loan Calculator":
 
 elif page == "Model Insights":
     st.header("Model Performance & Methodology")
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/gini.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/ks.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/CCF_dist.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/ead_residuals.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/lgd_residuals.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/recovery_rate_dist.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/roc_curve_lgd.png')
-    st.image('C:/Users/otnie/Documents/CR/Projects/PDmodel/roc_curve.png')
+    st.image('assets/gini.png')
+    st.image('assets/ks.png')
+    st.image('assets/CCF_dist.png')
+    st.image('assets/ead_residuals.png')
+    st.image('assets/lgd_residuals.png')
+    st.image('assets/recovery_rate_dist.png')
+    st.image('assets/roc_curve_lgd.png')
+    st.image('assets/roc_curve.png')
+
     # You can use st.image('roc_curve.png') if you save your plots as images.
