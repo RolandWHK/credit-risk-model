@@ -699,6 +699,19 @@ if page == "Individual Loan Calculator":
         res_col2.metric("LGD (%)", f"{lgd_val:.2%}")
         res_col3.metric("EAD ($)", f"${ead_val:,.2f}")
         res_col4.metric("Expected Loss ($)", f"${expected_loss:,.2f}")
+        el_percent = (expected_loss / loan_amt) * 100
+
+        st.subheader("Automated Credit Decision")
+
+        if pd_value < 0.05 and el_percent < 2:
+            st.success("✅ DECISION: AUTO-ACCEPT")
+            st.write("This borrower shows high stability and low expected loss.")
+        elif pd_value > 0.15 or acc_now_delinq >= 1:
+            st.error("❌ DECISION: AUTO-REJECT")
+            st.write("Risk exceeds internal tolerance thresholds.")
+        else:
+            st.warning("⚠️ DECISION: MANUAL REVIEW")
+            st.write("Borrower is in the 'Gray Zone'. Requires a credit officer to verify income/assets.")
 
 elif page == "Model Insights":
     st.header("Model Performance & Methodology")
@@ -712,3 +725,4 @@ elif page == "Model Insights":
     st.image('assets/roc_curve.png')
 
     # You can use st.image('roc_curve.png') if you save your plots as images.
+
