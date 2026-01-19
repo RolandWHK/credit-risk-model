@@ -504,8 +504,7 @@ if page == "Individual Loan Calculator":
         open_acc = st.number_input("Open Accounts")
         pub_rec = st.number_input("Public Record")
         total_rev_hi_lim = st.number_input("Total revolving high limit")
-        
-        
+      
     if st.button("Calculate Expected Loss"):
         # 1. Package Raw UI Data
         user_data = {
@@ -571,8 +570,50 @@ if page == "Individual Loan Calculator":
         res_col3.metric("EAD ($)", f"${ead_val:,.2f}")
         res_col4.metric("Expected Loss ($)", f"${expected_loss:,.2f}")
         # res_col5.metric("Ratio:", f"{expected_loss/loan_amt:,.2f}")
-        
-    if st.button("Calculate Expected (Prime Borrower)"):
+        el_percent = (expected_loss / loan_amt) * 100
+        st.subheader("Automated Credit Decision")
+        if pd_val < 0.05 and el_percent < 3:
+            st.success("✅ DECISION: AUTO-ACCEPT")
+            st.write("This borrower shows high stability and low expected loss.")
+        elif pd_val > 0.15 or acc_now_delinq >= 1:
+            st.error("❌ DECISION: AUTO-REJECT")
+            st.write("Risk exceeds internal tolerance thresholds.")
+        else:
+            st.warning("⚠️ DECISION: MANUAL REVIEW")
+            st.write("Borrower is in the 'Gray Zone'. Requires a credit officer to verify income/assets.")
+    st.markdown("""
+    <style>
+    /* Style for the Prime Borrower Button (Green) */
+    .element-container:has(#green-btn) + div button {
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        border: none;
+    }
+    
+    /* Style for the Bad Borrower Button (Red) */
+    .element-container:has(#red-btn) + div button {
+        background-color: #dc3545;
+        color: white;
+        border-radius: 5px;
+        border: none;
+    }
+
+    /* Hover effects to make it feel interactive */
+    .element-container:has(#green-btn) + div button:hover {
+        background-color: #218838;
+        color: white;
+    }
+    .element-container:has(#red-btn) + div button:hover {
+        background-color: #c82333;
+        color: white;
+    }
+    </style>
+""", unsafe_allow_html=True)
+    st.sidebar.header("Quick Demo Scenarios")
+  
+    st.sidebar.markdown('<span id="green-btn"></span>', unsafe_allow_html=True)  
+    if st.sidebar.button("Calculate Expected (Prime Borrower)"):
         user_data = {
             'grade': 'A', 'home_ownership': 'OWN', 'verification': 'Source Verified',
             'term_int': 36, 'int_rate': 10, 'annual_inc': 95000,
@@ -635,8 +676,8 @@ if page == "Individual Loan Calculator":
         res_col2.metric("LGD (%)", f"{lgd_val:.2%}")
         res_col3.metric("EAD ($)", f"${ead_val:,.2f}")
         res_col4.metric("Expected Loss ($)", f"${expected_loss:,.2f}")
-        
-    if st.button("Calculate Expected (Bad Borrower)"):
+    st.sidebar.markdown('<span id="red-btn"></span>', unsafe_allow_html=True) 
+    if st.sidebar.button("Calculate Expected (Bad Borrower)"):
         user_data = {
             'grade': 'G', 'home_ownership': 'MORTGAGE', 'verification': 'Not Verified',
             'term_int': 60, 'int_rate': 10, 'annual_inc': 75000,
@@ -699,19 +740,7 @@ if page == "Individual Loan Calculator":
         res_col2.metric("LGD (%)", f"{lgd_val:.2%}")
         res_col3.metric("EAD ($)", f"${ead_val:,.2f}")
         res_col4.metric("Expected Loss ($)", f"${expected_loss:,.2f}")
-        el_percent = (expected_loss / loan_amt) * 100
 
-        st.subheader("Automated Credit Decision")
-
-        if pd_value < 0.05 and el_percent < 2:
-            st.success("✅ DECISION: AUTO-ACCEPT")
-            st.write("This borrower shows high stability and low expected loss.")
-        elif pd_value > 0.15 or acc_now_delinq >= 1:
-            st.error("❌ DECISION: AUTO-REJECT")
-            st.write("Risk exceeds internal tolerance thresholds.")
-        else:
-            st.warning("⚠️ DECISION: MANUAL REVIEW")
-            st.write("Borrower is in the 'Gray Zone'. Requires a credit officer to verify income/assets.")
 
 elif page == "Model Insights":
     st.header("Model Performance & Methodology")
@@ -724,5 +753,5 @@ elif page == "Model Insights":
     st.image('assets/roc_curve_lgd.png')
     st.image('assets/roc_curve.png')
 
-    # You can use st.image('roc_curve.png') if you save your plots as images.
+
 
