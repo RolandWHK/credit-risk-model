@@ -572,7 +572,7 @@ if page == "Individual Loan Calculator":
         # res_col5.metric("Ratio:", f"{expected_loss/loan_amt:,.2f}")
         el_percent = (expected_loss / loan_amt) * 100
         st.subheader("Automated Credit Decision")
-        if pd_val < 0.05 and el_percent < 3:
+        if pd_val < 0.05 and el_percent < 5:
             st.success("✅ DECISION: AUTO-ACCEPT")
             st.write("This borrower shows high stability and low expected loss.")
         elif pd_val > 0.15 or acc_now_delinq >= 1:
@@ -752,6 +752,7 @@ elif page == "Model Insights":
     st.image('assets/recovery_rate_dist.png')
     st.image('assets/roc_curve_lgd.png')
     st.image('assets/roc_curve.png')
+
 
 
 
